@@ -1,0 +1,18 @@
+{
+  "name": "react-stripe",
+  "version": "1.0.0",
+  "description": "react-stripe demo",
+  "main": "server.js",
+  "dependencies": {
+    "dotenv": "^8.1.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.7.0",
+    "stripe": "^7.9.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
