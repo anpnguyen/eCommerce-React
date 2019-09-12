@@ -20,9 +20,12 @@ const StripeContainer = props => {
   };
 
   const axiosHeader = {
-    "Content-Type": "application/x-www-form-urlencoded",
-    "Authorization": `Bearer rk_test_xxxxxxxxxxxxxxxxxxxxxxxx`
+    "Content-Type": "application/json"
+    // "Authorization": `Bearer rk_test_xxxxxxxxxxxxxxxxxxxxxxxx`
   };
+
+
+  
 
   const handleCartChange = e => {
     e.preventDefault();
@@ -35,14 +38,15 @@ const StripeContainer = props => {
   const handleCartSubmit = async e => {
     e.preventDefault();
 
+    // this token allows you to store the suers name that is linked to the cc, but not the cc number itseld 
     const { token } = await stripe.createToken();
     // {name:'An', email:"aa@aa.com"}
     console.log(token);
 
     const totalPrice = 500;
 
-    const response = await axios.post('/charge', qs.stringify({
-        source: token.id,
+    const response = await axios.post('/charge', JSON.stringify({
+        source: token,
         amount: totalPrice,
         currency: 'usd'
       }), 
