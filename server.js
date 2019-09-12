@@ -33,7 +33,7 @@ app.post('/charge', async (req, res) => {
 
   console.log(req.body)
   try {
-    let response = await charge(req.body.source.id, req.body.amount)
+    let response = await charge(req.body.token.id, req.body.amount)
     console.log(response)
   
   } catch (err) {

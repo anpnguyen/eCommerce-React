@@ -46,7 +46,7 @@ const StripeContainer = props => {
     const totalPrice = 500;
 
     const response = await axios.post('/charge', JSON.stringify({
-        source: token,
+        token: token,
         amount: totalPrice,
         currency: 'usd'
       }), 
