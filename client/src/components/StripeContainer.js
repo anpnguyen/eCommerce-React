@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import axios from 'axios'
-import qs from 'query-string-object'
+import axios from "axios";
 
 import {
   CardElement,
@@ -14,23 +13,25 @@ const StripeContainer = props => {
   const [cart, setCart] = useState([{ item: "bananna", quantity: 0 }]);
   const [loading, isLoading] = useState(false);
 
+  const [user, setUser] = useState({ name: "", email: "", address: "" });
+
   const prices = {
     apple: 150,
     orange: 250
   };
 
-  const axiosHeader = {
-    "Content-Type": "application/json"
-    // "Authorization": `Bearer rk_test_xxxxxxxxxxxxxxxxxxxxxxxx`
+  const sku = {
+    tshirt: "sku_FnJ7E5EEavmbWd",
+    ebook: "sku_FmxE14XcellRYv"
   };
 
-
-  
+  const axiosHeader = {
+    "Content-Type": "application/json"    
+  };
 
   const handleCartChange = e => {
     e.preventDefault();
     let updated = cart.find(cartItem => cartItem.item === e.target.name);
-    console.log(updated);
     updated.quantity += parseInt(e.target.value);
     setCart([...cart, updated]);
   };
@@ -38,24 +39,53 @@ const StripeContainer = props => {
   const handleCartSubmit = async e => {
     e.preventDefault();
 
-    // this token allows you to store the suers name that is linked to the cc, but not the cc number itseld 
+    // this token allows you to store the suers name that is linked to the cc, but not the cc number itseld
     const { token } = await stripe.createToken();
     // {name:'An', email:"aa@aa.com"}
     console.log(token);
 
     const totalPrice = 500;
 
-    const response = await axios.post('/charge', JSON.stringify({
-        token: token,
-        amount: totalPrice,
-        currency: 'usd'
-      }), 
-      {headers:axiosHeader
+    const order = {
+      currency: "aud",
+      items: [
+        { type: "sku", parent: "sku_FnJ7E5EEavmbWd", quantity: 2 },
+        { type: "sku", parent: "sku_Fmy60bnUBvxkrD", quantity: 5 }
+      ],
 
+      email: "aa@aa.com",
+
+      shipping: {
+        name: "an",
+        address: {
+          line1: "Test line1",
+          city: "My City",
+          postal_code: "90210",
+          state: "CA"
+        }
       }
-      )
-    
-      console.log(response)
+      // selected_shipping_method: 'flat_fee',
+      // shipping_methods: [
+      //   {
+      //     id: "flat_fee",
+      //     amount: 0,
+      //     currency: "aud",
+      //     delivery_estimate: null,
+      //     description: "Free shipping"
+      //   }
+      // ]
+    };
+
+    const response = await axios.post(
+      "/order",
+      JSON.stringify({
+        order: order,
+        source: token.id
+      }),
+      { headers: axiosHeader }
+    );
+
+    console.log(response);
   };
 
   return (
